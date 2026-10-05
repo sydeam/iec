@@ -1,0 +1,8 @@
+.tools/
+brochure-extract/
+.chrome-*/
+.edge-*/
+*.png
+*.zip
+__pycache__/
+
