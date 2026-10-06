@@ -1,3 +1,28 @@
+const appScript = document.querySelector('script[src$="app.js"]');
+const siteRootUrl = new URL('.', appScript.src);
+
+function assetUrl(path) {
+  return new URL(`assets/${path.replace(/^assets\//, '')}`, siteRootUrl).href;
+}
+
+function cleanRouteUrl(hashRoute) {
+  const route = hashRoute.replace(/^#\/?/, '').replace(/^\/+|\/+$/g, '');
+  return new URL(route ? `${route}/` : './', siteRootUrl).pathname;
+}
+
+function applyCleanRoutes(scope = document) {
+  scope.querySelectorAll('a[href^="#/"]').forEach(link => {
+    link.setAttribute('href', cleanRouteUrl(link.getAttribute('href')));
+  });
+}
+
+function currentRouteParts() {
+  const rootPath = decodeURIComponent(siteRootUrl.pathname);
+  let path = decodeURIComponent(window.location.pathname);
+  if (path.startsWith(rootPath)) path = path.slice(rootPath.length);
+  return path.replace(/index\.html$/i, '').split('/').filter(Boolean);
+}
+
 const products = [
   {
     slug: 'motor-control-center',
@@ -63,7 +88,7 @@ const products = [
     bullets: ['Customized layouts, components and control systems', 'Engineered for application-specific performance and reliability', 'Built through a documented design, assembly and testing process'],
     applications: ['Custom machinery', 'Retrofit projects', 'Unique control systems', 'Integrated packages']
   }
-].map((product, index) => ({ ...product, image: `assets/${product.slug}.webp`, number: String(index + 1).padStart(2, '0') }));
+].map((product, index) => ({ ...product, image: assetUrl(`${product.slug}.webp`), number: String(index + 1).padStart(2, '0') }));
 
 const industries = [
   { slug: 'manufacturing', name: 'Manufacturing & Process Industries', copy: 'Coordinated distribution, motor control and automation for production environments.', solutions: ['MCC and PCC systems', 'Machine and line automation', 'Energy monitoring', 'Custom electrical integration'] },
@@ -76,10 +101,10 @@ const industries = [
 
 const clients = [
   ['BHEL', 1], ['Airports Authority of India', 2], ['Reserve Bank of India', 3], ['SAIL', 4], ['MEIL', 5], ['Jaypee Group', 6], ['UltraTech Cement', 7], ['Metrochem', 8], ['Honour', 9], ["Dr. Reddy's", 10], ['MSN Laboratories', 11], ['Tirumala Tirupati Devasthanams', 12], ['HITEX', 13], ['Lotus', 14], ['Puzzolana', 15]
-].map(([name, image]) => ({ name, image: `assets/clients/client-${String(image).padStart(2, '0')}.webp` }));
+].map(([name, image]) => ({ name, image: assetUrl(`clients/client-${String(image).padStart(2, '0')}.webp`) }));
 
 const aboutLinks = [
-  ['Company', '#/about/company'], ['Engineering & Manufacturing', '#/about/process'], ['Quality & Certifications', '#/about/quality']
+  ['Company', '#/about'], ['Engineering & Manufacturing', '#/about/process'], ['Quality & Certifications', '#/about/quality']
 ];
 
 const productLinks = [['All products', '#/products'], ...products.map(p => [p.name, `#/products/${p.slug}`])];
@@ -106,7 +131,7 @@ const productCard = (product) => `
 function homePage() {
   return `
     <section class="hero">
-      <div class="hero-media"><img src="assets/hero-engineering.webp" alt="Industrial electrical panels and electrical engineer" width="1600" height="668"></div>
+      <div class="hero-media"><img src="${assetUrl('hero-engineering.webp')}" alt="Industrial electrical panels and electrical engineer" width="1600" height="668"></div>
       <div class="hero-content">
         <span class="eyebrow">Engineered in Hyderabad. Built for industry.</span>
         <h1>Powering industry with <span>precision.</span></h1>
@@ -134,10 +159,10 @@ function homePage() {
             <div class="feature"><div class="feature-icon">02</div><div><h3>Integrated capability</h3><p>Power distribution, motor control, automation and custom-engineered panels under one roof.</p></div></div>
             <div class="feature"><div class="feature-icon">03</div><div><h3>Reliable delivery</h3><p>Clear communication, documented quality and attention to timely completion.</p></div></div>
           </div>
-          <a class="text-link" href="#/about/company">Discover the IEC story <span>↗</span></a>
+          <a class="text-link" href="#/about">Discover the IEC story <span>↗</span></a>
         </div>
         <div class="intro-visual">
-          <img src="assets/panel-room.webp" alt="IEC industrial electrical panel lineup" loading="lazy" width="1000" height="1416">
+          <img src="${assetUrl('panel-room.webp')}" alt="IEC industrial electrical panel lineup" loading="lazy" width="1000" height="1416">
           <div class="stat-card"><strong>2010</strong><span>The year IEC began delivering electrical and automation solutions.</span></div>
         </div>
       </div>
@@ -172,7 +197,7 @@ function homePage() {
             ${['Requirement & Design', 'Engineering & BOM', 'Sheet Metal Fabrication', 'Busbar Processing', 'Assembly & Wiring', 'Testing & Inspection', 'Quality Assurance', 'Packing & Dispatch'].map((step, index) => `<div class="process-step"><strong>${String(index + 1).padStart(2, '0')}</strong><div><h3>${step}</h3><p>${index < 2 ? 'Translate the application into a clear, buildable engineering plan.' : index < 6 ? 'Execute the panel build with disciplined production control.' : 'Verify, document and prepare the system for dependable delivery.'}</p></div></div>`).join('')}
           </div>
         </div>
-        <div class="process-visual"><img src="assets/power-grid.webp" alt="Power transmission infrastructure" loading="lazy"></div>
+        <div class="process-visual"><img src="${assetUrl('power-grid.webp')}" alt="Power transmission infrastructure" loading="lazy"></div>
       </div>
     </section>
 
@@ -192,7 +217,7 @@ function aboutPage(section = 'company') {
   const content = {
     company: {
       eyebrow: 'About IEC', title: 'Built on engineering clarity and dependable delivery.', copy: 'A Hyderabad-based electrical panel manufacturer serving industrial, commercial and infrastructure requirements since 2010.',
-      body: `<section class="section"><div class="shell story-grid"><div class="story-copy"><span class="eyebrow">Our company</span><h2>Solutions designed around the job—not a standard template.</h2><p>Industrial Electricals & Controls combines engineering knowledge, manufacturing capability and practical industry experience to develop electrical and automation solutions that support efficient operations and long-term value.</p><p>Its expertise covers power distribution, motor control, automation and custom-engineered panels for projects in India and international markets.</p><a class="text-link" href="#/about/process">See how IEC builds <span>↗</span></a></div><div class="story-media"><img src="assets/panel-room.webp" alt="Industrial electrical panels" loading="lazy"></div></div></section>
+      body: `<section class="section"><div class="shell story-grid"><div class="story-copy"><span class="eyebrow">Our company</span><h2>Solutions designed around the job—not a standard template.</h2><p>Industrial Electricals & Controls combines engineering knowledge, manufacturing capability and practical industry experience to develop electrical and automation solutions that support efficient operations and long-term value.</p><p>Its expertise covers power distribution, motor control, automation and custom-engineered panels for projects in India and international markets.</p><a class="text-link" href="#/about/process">See how IEC builds <span>↗</span></a></div><div class="story-media"><img src="${assetUrl('panel-room.webp')}" alt="Industrial electrical panels" loading="lazy"></div></div></section>
         <section class="section section-soft"><div class="shell"><div class="section-head"><div><span class="eyebrow">Why choose IEC</span><h2>Four principles behind every project.</h2></div><p>Practical capabilities distilled from the company brochure and manufacturing process.</p></div><div class="value-grid">${[['01','Customized solutions','Designed to meet specific project requirements.'],['02','Technical expertise','Experience across panel design, automation and electrical integration.'],['03','Clear communication','Smooth coordination through engineering, production and delivery.'],['04','Reliable delivery','Attention to quality, documentation and timely completion.']].map(v => `<div class="info-card"><b>${v[0]}</b><h3>${v[1]}</h3><p>${v[2]}</p></div>`).join('')}</div></div></section>`
     },
     process: {
@@ -227,7 +252,7 @@ function industriesPage(slug) {
   const i = industries.find(item => item.slug === slug);
   if (!i) return notFound();
   return pageHero('Industry application', i.name, i.copy, 'Industries') + `
-    <section class="section"><div class="shell detail-grid"><div class="detail-copy"><span class="eyebrow">Application ${i.number}</span><h2>Connect power, control and performance.</h2><p>IEC combines the relevant distribution, motor-control, automation and custom-engineering capabilities around the site’s operating priorities.</p><ul class="bullet-list">${i.solutions.map(s => `<li>${s}</li>`).join('')}</ul><div class="button-row"><a class="button button-primary" href="#/contact">Discuss this application <span>↗</span></a><a class="button" href="#/industries" style="border-color:var(--line)">All industries</a></div></div><div class="process-visual" style="min-height:450px"><img src="assets/power-grid.webp" alt="Power infrastructure for ${i.name}"></div></div></section>
+    <section class="section"><div class="shell detail-grid"><div class="detail-copy"><span class="eyebrow">Application ${i.number}</span><h2>Connect power, control and performance.</h2><p>IEC combines the relevant distribution, motor-control, automation and custom-engineering capabilities around the site’s operating priorities.</p><ul class="bullet-list">${i.solutions.map(s => `<li>${s}</li>`).join('')}</ul><div class="button-row"><a class="button button-primary" href="#/contact">Discuss this application <span>↗</span></a><a class="button" href="#/industries" style="border-color:var(--line)">All industries</a></div></div><div class="process-visual" style="min-height:450px"><img src="${assetUrl('power-grid.webp')}" alt="Power infrastructure for ${i.name}"></div></div></section>
     <section class="section section-soft"><div class="shell"><div class="section-head"><div><span class="eyebrow">Relevant capabilities</span><h2>Start with the system you need.</h2></div><p>IEC can coordinate multiple product families within one project.</p></div><div class="product-directory">${products.slice(0,4).map(p=>`<a class="directory-card" href="#/products/${p.slug}"><img src="${p.image}" alt="${p.name}" loading="lazy"><div><h3>${p.name}</h3><p>${p.short}</p><span class="text-link">Explore <span>↗</span></span></div></a>`).join('')}</div></div></section>` + ctaBand('Bring IEC into the project conversation.', 'Share the application, load and operating context to begin.', 'Contact IEC');
 }
 
@@ -254,7 +279,7 @@ function notFound() {
 }
 
 function footer() {
-  return `<div class="shell"><div class="footer-grid"><div class="footer-brand"><img src="assets/iec-logo.webp" alt="IEC"><p>Industrial Electricals & Controls designs and manufactures MCC, PCC, PLC, automation and custom-engineered electrical panels from Hyderabad, India.</p><a class="text-link" href="mailto:iec.hyderabad@yahoo.com">iec.hyderabad@yahoo.com <span>↗</span></a></div><div class="footer-nav"><div><h3>Explore</h3><a href="#/about/company">About IEC</a><a href="#/industries">Industries</a><a href="#/products">Products</a><a href="#/clients">Our clients</a></div><div><h3>Popular products</h3>${products.slice(0,5).map(p=>`<a href="#/products/${p.slug}">${p.name}</a>`).join('')}</div><div><h3>Contact</h3><a href="tel:+919440083166">+91 94400 83166</a><a href="tel:+914023095559">040-23095559</a><a href="https://wa.me/919440083166" target="_blank" rel="noreferrer">WhatsApp</a><a href="#/contact">Hyderabad works</a></div></div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} Industrial Electricals & Controls.</span><span>Engineered for clarity, speed and every screen.</span></div></div>`;
+  return `<div class="shell"><div class="footer-grid"><div class="footer-brand"><img src="${assetUrl('iec-logo.webp')}" alt="IEC"><p>Industrial Electricals & Controls designs and manufactures MCC, PCC, PLC, automation and custom-engineered electrical panels from Hyderabad, India.</p><a class="text-link" href="mailto:iec.hyderabad@yahoo.com">iec.hyderabad@yahoo.com <span>↗</span></a></div><div class="footer-nav"><div><h3>Explore</h3><a href="#/about">About IEC</a><a href="#/industries">Industries</a><a href="#/products">Products</a><a href="#/clients">Our clients</a></div><div><h3>Popular products</h3>${products.slice(0,5).map(p=>`<a href="#/products/${p.slug}">${p.name}</a>`).join('')}</div><div><h3>Contact</h3><a href="tel:+919440083166">+91 94400 83166</a><a href="tel:+914023095559">040-23095559</a><a href="https://wa.me/919440083166" target="_blank" rel="noreferrer">WhatsApp</a><a href="#/contact">Hyderabad works</a></div></div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} Industrial Electricals & Controls.</span><span>Engineered for clarity, speed and every screen.</span></div></div>`;
 }
 
 function menuMarkup() {
@@ -273,7 +298,7 @@ function megaMarkup(key) {
 }
 
 function render() {
-  const path = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+  const path = currentRouteParts();
   let html;
   if (!path.length) html = homePage();
   else if (path[0] === 'about') html = aboutPage(path[1] || 'company');
@@ -286,6 +311,7 @@ function render() {
   document.querySelector('#main-content').innerHTML = html;
   document.querySelector('#site-footer').innerHTML = footer();
   document.querySelector('#mobile-menu').innerHTML = menuMarkup();
+  applyCleanRoutes();
   document.title = `${path.length ? document.querySelector('h1')?.textContent + ' | ' : ''}IEC`;
   bindPageEvents();
 }
@@ -332,6 +358,7 @@ document.querySelectorAll('[data-menu]').forEach(button => {
   button.addEventListener('click', () => {
     const wasOpen = mega.classList.contains('open') && mega.dataset.menu === button.dataset.menu;
     mega.innerHTML = wasOpen ? '' : megaMarkup(button.dataset.menu);
+    if (!wasOpen) applyCleanRoutes(mega);
     mega.dataset.menu = wasOpen ? '' : button.dataset.menu;
     mega.classList.toggle('open', !wasOpen);
     mega.setAttribute('aria-hidden', String(wasOpen));
@@ -351,16 +378,6 @@ mega.addEventListener('click', event => {
 
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape') closeMega();
-});
-
-window.addEventListener('hashchange', () => {
-  closeMega();
-  toggle.setAttribute('aria-expanded', 'false');
-  mobileMenu.classList.remove('open');
-  mobileMenu.setAttribute('aria-hidden', 'true');
-  document.body.classList.remove('menu-open');
-  render();
-  window.scrollTo(0, 0);
 });
 
 render();
