@@ -1,8 +1,4 @@
-.tools/
-brochure-extract/
-.chrome-*/
-.edge-*/
-*.png
 *.zip
-__pycache__/
-
+*.log
+.DS_Store
+Thumbs.db

@@ -321,6 +321,13 @@ toggle.addEventListener('click', () => {
 });
 
 const mega = document.querySelector('#mega-menu');
+function closeMega() {
+  mega.classList.remove('open');
+  mega.setAttribute('aria-hidden', 'true');
+  mega.dataset.menu = '';
+  document.querySelectorAll('[data-menu]').forEach(item => item.setAttribute('aria-expanded', 'false'));
+}
+
 document.querySelectorAll('[data-menu]').forEach(button => {
   button.addEventListener('click', () => {
     const wasOpen = mega.classList.contains('open') && mega.dataset.menu === button.dataset.menu;
@@ -328,18 +335,26 @@ document.querySelectorAll('[data-menu]').forEach(button => {
     mega.dataset.menu = wasOpen ? '' : button.dataset.menu;
     mega.classList.toggle('open', !wasOpen);
     mega.setAttribute('aria-hidden', String(wasOpen));
+    document.querySelectorAll('[data-menu]').forEach(item => item.setAttribute('aria-expanded', String(!wasOpen && item === button)));
   });
 });
 
 document.addEventListener('click', event => {
   if (!event.target.closest('.site-header')) {
-    mega.classList.remove('open');
-    mega.setAttribute('aria-hidden', 'true');
+    closeMega();
   }
 });
 
+mega.addEventListener('click', event => {
+  if (event.target === mega) closeMega();
+});
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') closeMega();
+});
+
 window.addEventListener('hashchange', () => {
-  mega.classList.remove('open');
+  closeMega();
   toggle.setAttribute('aria-expanded', 'false');
   mobileMenu.classList.remove('open');
   mobileMenu.setAttribute('aria-hidden', 'true');
