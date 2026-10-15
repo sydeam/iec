@@ -260,7 +260,34 @@ p { line-height: 1.7; }
   .brand small { font-size: 12px; }
   .desktop-nav { display: flex; align-items: center; gap: 4px; margin-left: auto; }
   .desktop-nav a, .desktop-nav button { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; color: #314258; border: 0; background: transparent; font-size: 15px; line-height: 1; font-weight: 720; white-space: nowrap; cursor: pointer; }
-  .desktop-nav button span { display: inline-block; flex: 0 0 auto; margin: 0; color: #7c8b99; line-height: 1; transform: translateY(-1px); }
+  .desktop-nav button > span {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    flex: 0 0 12px;
+    align-self: center;
+    margin: 0;
+    color: #7c8b99;
+    font-size: 0;
+    line-height: 0;
+  }
+  .desktop-nav button > span::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translate(-50%, -68%) rotate(45deg);
+    transform-origin: center;
+    transition: transform .2s ease;
+  }
+  .desktop-nav button[aria-expanded="true"] > span::before {
+    transform: translate(-50%, -32%) rotate(225deg);
+  }
   .desktop-nav a:hover, .desktop-nav button:hover { color: var(--azure-dark); }
   .header-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 19px; color: #fff; border-radius: 999px; background: var(--navy); font-size: 14px; font-weight: 780; white-space: nowrap; }
   .menu-toggle, .mobile-menu { display: none; }
