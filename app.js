@@ -103,6 +103,21 @@ const clients = [
   ['BHEL', 1], ['Airports Authority of India', 2], ['Reserve Bank of India', 3], ['SAIL', 4], ['MEIL', 5], ['Jaypee Group', 6], ['UltraTech Cement', 7], ['Metrochem', 8], ['Honour', 9], ["Dr. Reddy's", 10], ['MSN Laboratories', 11], ['Tirumala Tirupati Devasthanams', 12], ['HITEX', 13], ['Lotus', 14], ['Puzzolana', 15]
 ].map(([name, image]) => ({ name, image: assetUrl(`clients/client-${String(image).padStart(2, '0')}.webp`) }));
 
+// Demonstration locations. Replace these entries with client-approved project data.
+const sampleProjects = [
+  { city: 'Hyderabad', country: 'India', coordinates: [17.3850, 78.4867], solution: 'Automation & control panels', industry: 'Pharmaceutical', region: 'india' },
+  { city: 'Dewas', country: 'India', coordinates: [22.9676, 76.0534], solution: 'MCC & PCC systems', industry: 'Manufacturing', region: 'india' },
+  { city: 'Pune', country: 'India', coordinates: [18.5204, 73.8567], solution: 'Power distribution panels', industry: 'Automotive', region: 'india' },
+  { city: 'Mumbai', country: 'India', coordinates: [19.0760, 72.8777], solution: 'Breaker panels', industry: 'Infrastructure', region: 'india' },
+  { city: 'Chennai', country: 'India', coordinates: [13.0827, 80.2707], solution: 'PLC & automation panels', industry: 'Process industry', region: 'india' },
+  { city: 'Ahmedabad', country: 'India', coordinates: [23.0225, 72.5714], solution: 'APFC panels', industry: 'Utilities', region: 'india' },
+  { city: 'New Delhi', country: 'India', coordinates: [28.6139, 77.2090], solution: 'Specialised panels', industry: 'Commercial', region: 'india' },
+  { city: 'Dubai', country: 'United Arab Emirates', coordinates: [25.2048, 55.2708], solution: 'Power control systems', industry: 'Infrastructure', region: 'international' },
+  { city: 'Doha', country: 'Qatar', coordinates: [25.2854, 51.5310], solution: 'Motor control systems', industry: 'Utilities', region: 'international' },
+  { city: 'Nairobi', country: 'Kenya', coordinates: [-1.2921, 36.8219], solution: 'Water-system controls', industry: 'Water treatment', region: 'international' },
+  { city: 'Rotterdam', country: 'Netherlands', coordinates: [51.9244, 4.4777], solution: 'Automation panels', industry: 'Material handling', region: 'international' }
+];
+
 const aboutLinks = [
   ['Company', '#/about'], ['Engineering & Manufacturing', '#/about/process'], ['Quality & Certifications', '#/about/quality']
 ];
@@ -213,11 +228,45 @@ function ctaBand(title, copy, label = 'Contact IEC') {
   return `<section class="cta-band"><div class="shell"><div class="cta-panel"><h2>${title}</h2><p>${copy}</p><div class="button-row"><a class="button button-light" href="#/contact">${label} <span>↗</span></a><a class="button button-secondary" href="tel:+919440083166">Call +91 94400 83166</a></div></div></div></section>`;
 }
 
+function projectFootprintSection() {
+  return `<section class="section footprint-section" aria-labelledby="footprint-title">
+    <div class="shell">
+      <div class="footprint-heading">
+        <div><span class="eyebrow">Project footprint</span><h2 id="footprint-title">Engineered here. Delivered across borders.</h2></div>
+        <p>Explore demonstration locations showing how IEC project deliveries can be presented across India and international markets.</p>
+      </div>
+      <div class="footprint-panel">
+        <div class="footprint-intro">
+          <span class="demo-badge"><i aria-hidden="true"></i> Sample project data</span>
+          <h3>One view of a growing delivery network.</h3>
+          <p>Use the filters, select a marker for project details, or zoom and pan the map. These locations will be replaced with verified project information from IEC.</p>
+          <div class="map-filters" aria-label="Filter project locations">
+            <button type="button" class="map-filter active" data-map-filter="all" aria-pressed="true">All locations</button>
+            <button type="button" class="map-filter" data-map-filter="india" aria-pressed="false">India</button>
+            <button type="button" class="map-filter" data-map-filter="international" aria-pressed="false">International</button>
+          </div>
+          <div class="map-legend" aria-label="Map legend">
+            <span><i class="legend-dot india" aria-hidden="true"></i> India sample</span>
+            <span><i class="legend-dot international" aria-hidden="true"></i> International sample</span>
+          </div>
+        </div>
+        <div class="project-map-wrap">
+          <div id="project-map" class="project-map" role="region" aria-label="Interactive map of sample IEC project locations" tabindex="0">
+            <div class="map-loading"><span aria-hidden="true"></span> Loading project map…</div>
+          </div>
+          <p class="map-instruction">Use <strong>+</strong>/<strong>−</strong>, scroll or a two-finger trackpad gesture while hovering the map. Pinch with two fingers on mobile.</p>
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
 function aboutPage(section = 'company') {
   const content = {
     company: {
       eyebrow: 'About IEC', title: 'Built on engineering clarity and dependable delivery.', copy: 'A Hyderabad-based electrical panel manufacturer serving industrial, commercial and infrastructure requirements since 2010.',
       body: `<section class="section"><div class="shell story-grid"><div class="story-copy"><span class="eyebrow">Our company</span><h2>Solutions designed around the job—not a standard template.</h2><p>Industrial Electricals & Controls combines engineering knowledge, manufacturing capability and practical industry experience to develop electrical and automation solutions that support efficient operations and long-term value.</p><p>Its expertise covers power distribution, motor control, automation and custom-engineered panels for projects in India and international markets.</p><a class="text-link" href="#/about/process">See how IEC builds <span>↗</span></a></div><div class="story-media"><img src="${assetUrl('panel-room.webp')}" alt="Industrial electrical panels" loading="lazy"></div></div></section>
+        ${projectFootprintSection()}
         <section class="section section-soft"><div class="shell"><div class="section-head"><div><span class="eyebrow">Why choose IEC</span><h2>Four principles behind every project.</h2></div><p>Practical capabilities distilled from the company brochure and manufacturing process.</p></div><div class="value-grid">${[['01','Customized solutions','Designed to meet specific project requirements.'],['02','Technical expertise','Experience across panel design, automation and electrical integration.'],['03','Clear communication','Smooth coordination through engineering, production and delivery.'],['04','Reliable delivery','Attention to quality, documentation and timely completion.']].map(v => `<div class="info-card"><b>${v[0]}</b><h3>${v[1]}</h3><p>${v[2]}</p></div>`).join('')}</div></div></section>`
     },
     process: {
@@ -316,7 +365,139 @@ function render() {
   bindPageEvents();
 }
 
+let leafletPromise;
+
+function loadLeaflet() {
+  if (window.L) return Promise.resolve(window.L);
+  if (leafletPromise) return leafletPromise;
+
+  const stylesheetPromise = new Promise((resolve, reject) => {
+    const existing = document.querySelector('#leaflet-styles');
+    if (existing) {
+      if (existing.sheet) resolve();
+      else {
+        existing.addEventListener('load', resolve, { once: true });
+        existing.addEventListener('error', reject, { once: true });
+      }
+      return;
+    }
+    const stylesheet = document.createElement('link');
+    stylesheet.id = 'leaflet-styles';
+    stylesheet.rel = 'stylesheet';
+    stylesheet.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    stylesheet.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
+    stylesheet.crossOrigin = 'anonymous';
+    stylesheet.addEventListener('load', resolve, { once: true });
+    stylesheet.addEventListener('error', reject, { once: true });
+    document.head.appendChild(stylesheet);
+  });
+
+  const scriptPromise = new Promise((resolve, reject) => {
+    const existing = document.querySelector('#leaflet-script');
+    if (existing) {
+      if (window.L) resolve();
+      else {
+        existing.addEventListener('load', resolve, { once: true });
+        existing.addEventListener('error', reject, { once: true });
+      }
+      return;
+    }
+    const script = document.createElement('script');
+    script.id = 'leaflet-script';
+    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
+    script.crossOrigin = 'anonymous';
+    script.addEventListener('load', resolve, { once: true });
+    script.addEventListener('error', reject, { once: true });
+    document.head.appendChild(script);
+  });
+
+  leafletPromise = Promise.all([stylesheetPromise, scriptPromise]).then(() => window.L);
+  return leafletPromise;
+}
+
+async function initProjectMap() {
+  const mapElement = document.querySelector('#project-map');
+  if (!mapElement || mapElement.dataset.ready === 'true') return;
+  mapElement.dataset.ready = 'true';
+
+  try {
+    const L = await loadLeaflet();
+    mapElement.innerHTML = '';
+
+    const map = L.map(mapElement, {
+      zoomControl: false,
+      minZoom: 2,
+      maxZoom: 18,
+      scrollWheelZoom: true,
+      wheelDebounceTime: 40,
+      wheelPxPerZoomLevel: 90,
+      touchZoom: true,
+      doubleClickZoom: true,
+      keyboard: true,
+      worldCopyJump: true
+    });
+
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a>'
+    }).addTo(map);
+
+    const markerLayer = L.layerGroup().addTo(map);
+    const filterButtons = document.querySelectorAll('[data-map-filter]');
+
+    const drawProjects = filter => {
+      markerLayer.clearLayers();
+      const visibleProjects = filter === 'all' ? sampleProjects : sampleProjects.filter(project => project.region === filter);
+      const bounds = L.latLngBounds();
+
+      visibleProjects.forEach(project => {
+        const icon = L.divIcon({
+          className: 'project-map-pin',
+          html: `<span class="project-map-pin__pulse ${project.region}" aria-hidden="true"></span><span class="project-map-pin__dot ${project.region}" aria-hidden="true"></span>`,
+          iconSize: [34, 34],
+          iconAnchor: [17, 17],
+          popupAnchor: [0, -15]
+        });
+        L.marker(project.coordinates, { icon, title: `${project.city}, ${project.country}` })
+          .bindPopup(`<div class="project-map-popup"><span>Demonstration location</span><strong>${project.city}, ${project.country}</strong><p>${project.solution}</p><small>${project.industry}</small></div>`, { closeButton: false, maxWidth: 250 })
+          .addTo(markerLayer);
+        bounds.extend(project.coordinates);
+      });
+
+      if (bounds.isValid()) {
+        map.fitBounds(bounds, {
+          padding: window.innerWidth < 700 ? [28, 28] : [48, 48],
+          maxZoom: filter === 'india' ? 5 : 4
+        });
+      }
+    };
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        filterButtons.forEach(item => {
+          const selected = item === button;
+          item.classList.toggle('active', selected);
+          item.setAttribute('aria-pressed', String(selected));
+        });
+        drawProjects(button.dataset.mapFilter);
+      });
+    });
+
+    drawProjects('all');
+    window.setTimeout(() => map.invalidateSize({ pan: false }), 120);
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(() => map.invalidateSize({ pan: false })).observe(mapElement);
+    }
+  } catch (error) {
+    mapElement.dataset.ready = 'false';
+    mapElement.innerHTML = `<div class="map-fallback"><strong>The interactive map could not load.</strong><span>Please check your internet connection. Project locations remain sample data.</span></div>`;
+  }
+}
+
 function bindPageEvents() {
+  initProjectMap();
   const form = document.querySelector('#contact-form');
   if (!form) return;
   form.addEventListener('submit', event => {
